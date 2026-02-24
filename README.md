@@ -1,120 +1,114 @@
-# DeliveryApp
-
-Um sistema simples de delivery em Java, que permite criar clientes, pedidos, adicionar produtos e escolher diferentes formas de pagamento.
+## DeliveryApp
+Um sistema simples de delivery em Java, que permite cadastrar clientes, produtos, criar pedidos, vincular produtos aos pedidos e registrar pagamentos, tudo integrado a um banco de dados SQLite.
 
 ## 🚀 Funcionalidades
-- Cadastro de **Cliente** (ID, nome e endereço).
-- Criação de **Pedido** vinculado a um cliente.
-- Adição de **Produtos** (nome, preço e categoria).
-- Cálculo automático do **total do pedido**.
-- Escolha da **forma de pagamento**:
-  - Pix
-  - Cartão
-  - Dinheiro
-  - Banco (transferência)
-- Finalização do pedido com simulação de processamento.
+- Cadastro de Cliente (ID, nome e endereço).
+- Cadastro de Produto (nome, preço e categoria).
+- Criação de Pedido vinculado a um cliente.
+- Associação de Produtos a um pedido.
+- Registro de Pagamento (tipo e valor).
+- Listagem de clientes, produtos, pedidos, produtos de um pedido e pagamentos.
+- Persistência dos dados em banco de dados SQLite.
 
 ## 📂 Estrutura do Projeto
-com.kauabiscotto.DeliveryApp ├── Cliente.java ├── Pedido.java ├── Produto.java ├── Pagamento.java (interface) ├── PagamentoPix.java ├── PagamentoCartao.java ├── PagamentoDinheiro.java ├── PagamentoBanco.java └── Main.java
+com.kauabiscotto.DeliveryApp
+├── Cliente.java
+├── Produto.java
+├── Pedido.java
+├── Pagamento.java
+├── ClienteDAO.java
+├── ProdutoDAO.java
+├── PedidoDAO.java
+├── PedidoProdutoDAO.java
+├── PagamentoDAO.java
+├── ConexaoBD.java
+├── InicializaBD.java
+└── MainDeliveryApp.java
+
 
 ## 🧑‍💻 Exemplo de Uso
-Ao executar o `Main.java`, o usuário interage com o sistema:
+Ao executar o MainDeliveryApp, o usuário interage com o sistema por meio de um menu no console:
 
-1. Digita os dados do cliente.
-2. Cria um pedido e adiciona produtos.
-3. Escolhe a forma de pagamento.
-4. O sistema simula o processamento e mostra o resumo final.
+=== MENU DELIVERY ===
 
-### Exemplo de execução
-=== Cadastro do Cliente ===
+1 - Cadastrar Cliente
 
-Digite o ID do cliente: 1
+2 - Cadastrar Produto
 
-Digite o nome do cliente: Kauã Biscotto
+3 - Criar Pedido
 
-Digite o endereço do cliente: Rua das Flores, 123
+4 - Adicionar Produto ao Pedido
 
-=== Criando Pedido ===
+5 - Registrar Pagamento
 
-Digite o ID do pedido: 101
+6 - Listar Clientes
 
-Cliente associado ao pedido!
+7 - Listar Produtos
 
-=== Adicionando Produtos === 
+8 - Listar Pedidos
 
-Nome do produto: Hambúrguer
+9 - Listar Produtos de um Pedido
 
-Preço do produto: 20
+10 - Listar Pagamentos
 
-Categoria do produto: Comida
+0 - Sair
 
-Produto adicionado!
 
-Deseja adicionar outro produto? (s/n): s
+## Exemplo de execução
+Escolha uma opção: 1
 
-Nome do produto: Refrigerante
+ID do cliente: 1
 
-Preço do produto: 5
+Nome: Kauã Biscotto
 
-Categoria do produto: Bebida
+Endereço: Rua das Flores, 123
 
-Produto adicionado!
+Cliente salvo no banco!
 
-Deseja adicionar outro produto? (s/n): n
+Escolha uma opção: 2
 
-=== Forma de Pagamento === 
+Nome do produto: Pizza Calabresa
 
-1 - Pix 
+Preço: 39.90
 
-2 - Cartão 
+Categoria: Pizza
 
-3 - Dinheiro 
+Produto salvo no banco!
 
-4 - Banco 
+Escolha uma opção: 3
 
-Escolha a forma de pagamento: 2 
+ID do pedido: 1
 
-forma de pagamento definida!
+ID do cliente: 1
 
---- Pedido antes da finalização --- 
+Pedido salvo no banco!
 
-Pedido ID: 101 
+Escolha uma opção: 4
 
-Status: Em andamento 
+ID do pedido: 1
 
-Cliente: Kauã Biscotto | Endereço: Rua das Flores, 123 
+ID do produto: 1
 
-Produtos:
+Produto vinculado ao pedido!
 
-- Hambúrguer  R$20.0
+Escolha uma opção: 5
 
-- Refrigerante  R$5.0 Total: R$25.0
+ID do pedido: 1
 
-Processando pagamento...
+Tipo de pagamento (Cartão/Pix/Dinheiro): Cartão
 
-Pagamento de R$25.0 realizado com Cartão.
+Valor: 39.90
 
-Pedido concluído!
+Pagamento registrado!
 
-Gerando resumo do pedido...
 
---- Pedido após finalização ---
 
-  Pedido ID: 101
-  
-  Status: Finalizado
-  
-  Cliente: Kauã Biscotto | Endereço: Rua das Flores, 123
-  
-  Produtos:
-- Hambúrguer  R$20.0
-- Refrigerante  R$5.0 Total: R$25.0
-
-  
 ## 🛠️ Tecnologias
 - Java 17+
+- SQLite (banco de dados)
+- JDBC (conexão com o banco)
 - Paradigma Orientado a Objetos (POO)
-
 ## 📌 Observações
-- O projeto é apenas um exemplo didático de POO em Java.
-- Pode ser expandido para incluir banco de dados, interface gráfica ou API REST.
+- O projeto é um exemplo didático de integração Java + Banco de Dados.
+- Pode ser expandido para incluir interface gráfica (JavaFX/Swing) ou API REST (Spring Boot).
+- O banco de dados é criado automaticamente no arquivo delivery.db.
