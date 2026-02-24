@@ -3,79 +3,99 @@ package com.kauabiscotto.DeliveryApp;
 import java.util.Scanner;
 
 public class DeliveryApp {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-    public static void main(String[] args) throws InterruptedException {
+        ClienteDAO clienteDAO = new ClienteDAO();
+        ProdutoDAO produtoDAO = new ProdutoDAO();
+        PedidoDAO pedidoDAO = new PedidoDAO();
+        PedidoProdutoDAO pedidoProdutoDAO = new PedidoProdutoDAO();
+        PagamentoDAO pagamentoDAO = new PagamentoDAO();
 
-        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("\n=== MENU DELIVERY ===");
+            System.out.println("1 - Cadastrar Cliente");
+            System.out.println("2 - Cadastrar Produto");
+            System.out.println("3 - Criar Pedido");
+            System.out.println("4 - Adicionar Produto ao Pedido");
+            System.out.println("5 - Registrar Pagamento");
+            System.out.println("6 - Listar Clientes");
+            System.out.println("7 - Listar Produtos");
+            System.out.println("8 - Listar Pedidos");
+            System.out.println("9 - Listar Produtos de um Pedido");
+            System.out.println("10 - Listar Pagamentos");
+            System.out.println("0 - Sair");
+            System.out.print("Escolha uma opção: ");
+            int opcao = sc.nextInt();
+            sc.nextLine(); // consumir quebra de linha
 
-        System.out.println("=== Cadastro do Cliente ===");
-        System.out.println("Digite o ID do cliente: ");
-        int idCliente = scanner.nextInt();
-        scanner.nextLine();
-
-        System.out.println("Digite o nome do cliente: ");
-        String nomeCliente = scanner.nextLine();
-
-        System.out.println("Digite o endereço do cliente: ");
-        String enderecoCliente = scanner.nextLine();
-
-        Cliente cliente = new Cliente(idCliente, nomeCliente, enderecoCliente);
-
-        System.out.println("\n=== Criando Pedido ===");
-        System.out.println("Digite o ID do pedido: ");
-        int idPedido = scanner.nextInt();
-        scanner.nextLine();
-
-        Pedido pedido = new Pedido(idPedido);
-        pedido.setCliente(cliente);
-
-        System.out.println("\n=== Adicionando Produtos ===");
-        String continuar;
-        do {
-            System.out.println("Nome do produto: ");
-            String nomeProduto = scanner.nextLine();
-
-            System.out.println("Preço do produto: ");
-            double precoPorduto = scanner.nextDouble();
-            scanner.nextLine();
-
-            System.out.println("Categoria do produto: ");
-            String categoriaProduto = scanner.nextLine();
-
-            Produto produto = new Produto(nomeProduto, precoPorduto, categoriaProduto);
-            pedido.adicionarProduto(produto);
-
-            System.out.println("Deseja adicionar outro produto? (s/n): ");
-            continuar = scanner.nextLine();
-        } while (continuar.equalsIgnoreCase("s"));
-
-        System.out.println("\n=== Forma de Pagamento ===");
-        System.out.println("1 - Pix");
-        System.out.println("2 - Cartão");
-        System.out.println("3 - Dinheiro");
-        System.out.println("4 - Banco");
-        System.out.println("Escolha a forma de pagamento: ");
-        int opcao = scanner.nextInt();
-
-        switch (opcao) {
-            case 1 -> pedido.setPagamento(new PagamentoPix());
-            case 2 -> pedido.setPagamento(new PagamentoCartao());
-            case 3 -> pedido.setPagamento(new PagamentoDinheiro());
-            case 4 -> pedido.setPagamento(new PagamentoBanco());
-            default -> System.out.println("Opção inválida!");
+            switch (opcao) {
+                case 1 -> {
+                    System.out.print("ID do cliente: ");
+                    int id = sc.nextInt(); sc.nextLine();
+                    System.out.print("Nome: ");
+                    String nome = sc.nextLine();
+                    System.out.print("Endereço: ");
+                    String endereco = sc.nextLine();
+                    Cliente cliente = new Cliente(id, nome, endereco);
+                    clienteDAO.salvar(cliente);
+                }
+                case 2 -> {
+                    System.out.print("Nome do produto: ");
+                    String nome = sc.nextLine();
+                    System.out.print("Preço: ");
+                    double preco = sc.nextDouble(); sc.nextLine();
+                    System.out.print("Categoria: ");
+                    String categoria = sc.nextLine();
+                    Produto produto = new Produto(nome, preco, categoria);
+                    produtoDAO.salvar(produto);
+                }
+                case 3 -> {
+                    System.out.print("ID do pedido: ");
+                    int id = sc.nextInt(); sc.nextLine();
+                    System.out.print("ID do cliente: ");
+                    int clienteId = sc.nextInt(); sc.nextLine();
+                    Cliente cliente = clienteDAO.buscarPorId(clienteId);
+                    if (cliente != null) {
+                        Pedido pedido = new Pedido(id, cliente, "Em andamento");
+                        pedidoDAO.salvar(pedido);
+                    } else {
+                        System.out.println("Cliente não encontrado!");
+                    }
+                }
+                case 4 -> {
+                    System.out.print("ID do pedido: ");
+                    int pedidoId = sc.nextInt();
+                    System.out.print("ID do produto: ");
+                    int produtoId = sc.nextInt();
+                    pedidoProdutoDAO.adicionarProdutoAoPedido(pedidoId, produtoId);
+                }
+                case 5 -> {
+                    System.out.print("ID do pedido: ");
+                    int pedidoId = sc.nextInt(); sc.nextLine();
+                    System.out.print("Tipo de pagamento (Cartão/Pix/Dinheiro): ");
+                    String tipo = sc.nextLine();
+                    System.out.print("Valor: ");
+                    double valor = sc.nextDouble();
+                    Pagamento pagamento = new Pagamento(pedidoId, tipo, valor);
+                    pagamentoDAO.salvar(pagamento);
+                }
+                case 6 -> clienteDAO.listarTodos();
+                case 7 -> produtoDAO.listarTodos();
+                case 8 -> pedidoDAO.listarTodos();
+                case 9 -> {
+                    System.out.print("ID do pedido: ");
+                    int pedidoId = sc.nextInt();
+                    pedidoProdutoDAO.listarProdutosDoPedido(pedidoId);
+                }
+                case 10 -> pagamentoDAO.listarTodos();
+                case 0 -> {
+                    System.out.println("Saindo...");
+                    sc.close();
+                    return;
+                }
+                default -> System.out.println("Opção inválida!");
+            }
         }
-
-        System.out.println("\n--- Pedido antes da finalização ---");
-        Thread.sleep(2000);
-
-        pedido.finalizarPedido();
-
-        System.out.println("\nGerando resumo do pedido...");
-        Thread.sleep(2000);
-
-        System.out.println("\n--- Pedido após finalização ---");
-        System.out.println(pedido);
-
-        scanner.close();
     }
 }
